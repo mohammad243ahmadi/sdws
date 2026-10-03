@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "SDWS Backend",
+			"type": "shell",
+			"command": "cd backend && SDWS_DB_PATH=/tmp/sdws-dev-db APP_JWT_SECRET=\"$(openssl rand -base64 32)\" mvn spring-boot:run",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "SDWS Frontend",
+			"type": "shell",
+			"command": "cd frontend && npm run dev",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}

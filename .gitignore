@@ -1,0 +1,6 @@
+target/
+backend/target/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+data/*.trace.db
