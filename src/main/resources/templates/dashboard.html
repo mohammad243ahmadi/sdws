@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Dashboard')}"></head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+  <div th:replace="~{fragments :: flash}"></div>
+  <h2>Welcome, <span th:text="${user.fullName}"></span></h2>
+  <p class="subtitle">Here is a summary of your wallet.</p>
+
+  <div class="card balance">
+    <small>Available balance</small>
+    <h2 th:text="${#numbers.formatDecimal(wallet.balance,1,'COMMA',2,'POINT')} + ' AFN'"></h2>
+    <div class="meta">
+      <span th:text="'Account: ' + ${wallet.accountNumber}"></span>
+      <span th:text="${user.fullName}"></span>
+    </div>
+  </div>
+
+  <h3>Quick actions</h3>
+  <div class="tiles">
+    <a class="tile" th:href="@{/send}"><span class="ico">↗</span>Send</a>
+    <a class="tile" th:href="@{/add}"><span class="ico">+</span>Add money</a>
+    <a class="tile" th:href="@{/withdraw}"><span class="ico">↙</span>Withdraw</a>
+    <a class="tile" th:href="@{/request}"><span class="ico">⇄</span>Request</a>
+    <a class="tile" th:href="@{/topup}"><span class="ico">☎</span>Top-up</a>
+    <a class="tile" th:href="@{/bills}"><span class="ico">▤</span>Bills</a>
+  </div>
+
+  <h3>Recent transactions</h3>
+  <div th:replace="~{fragments :: txTable(${txs}, false)}"></div>
+  <p><a th:href="@{/history}">View all transactions →</a></p>
+</main>
+</body>
+</html>

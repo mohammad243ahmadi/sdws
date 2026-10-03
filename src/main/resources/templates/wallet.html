@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Wallet')}"></head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+  <div th:replace="~{fragments :: flash}"></div>
+  <h2>My Wallet</h2>
+  <div class="card">
+    <p>Owner: <b th:text="${user.fullName}"></b></p>
+    <p>Account number: <b th:text="${wallet.accountNumber}"></b></p>
+    <p>Available balance: <b th:text="${#numbers.formatDecimal(wallet.balance,1,'COMMA',2,'POINT')} + ' AFN'"></b></p>
+  </div>
+</main>
+</body>
+</html>

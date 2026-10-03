@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(t)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${t} + ' | SDWS'">SDWS</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav th:fragment="nav" class="nav">
+  <a class="brand" th:href="@{/dashboard}">SDWS</a>
+  <div class="nav-user" sec:authorize="isAuthenticated()">Signed in: <span sec:authentication="name"></span></div>
+  <th:block sec:authorize="!hasRole('ADMIN')">
+    <a th:href="@{/dashboard}">Dashboard</a>
+    <a th:href="@{/wallet}">Wallet</a>
+    <a th:href="@{/send}">Send Money</a>
+    <a th:href="@{/receive}">Receive Money</a>
+    <a th:href="@{/add}">Add Money</a>
+    <a th:href="@{/withdraw}">Withdraw</a>
+    <a th:href="@{/request}">Request Money</a>
+    <a th:href="@{/requests}">My Requests</a>
+    <a th:href="@{/topup}">Mobile Top-up</a>
+    <a th:href="@{/bills}">Bill Payment</a>
+    <a th:href="@{/history}">History</a>
+    <a th:href="@{/profile}">Profile</a>
+  </th:block>
+  <th:block sec:authorize="hasRole('ADMIN')">
+    <a th:href="@{/admin}">Overview</a>
+    <a th:href="@{/admin/users}">Users</a>
+    <a th:href="@{/admin/transactions}">Transactions</a>
+  </th:block>
+  <form th:action="@{/logout}" method="post"><button class="link">Log out</button></form>
+  <script>
+    document.querySelectorAll('.nav a:not(.brand)').forEach(function (a) {
+      if (a.pathname === location.pathname) a.classList.add('active');
+    });
+  </script>
+</nav>
+
+<div th:fragment="flash">
+  <div class="msg" th:if="${msg}" th:text="${msg}"></div>
+  <div class="error" th:if="${error}" th:text="${error}"></div>
+</div>
+
+<div class="table-wrap" th:fragment="txTable(list, showUser)">
+  <table>
+    <thead><tr><th>#</th><th th:if="${showUser}">User</th><th>Type</th><th>Amount</th><th>Date</th><th>Status</th><th>Details</th></tr></thead>
+    <tbody>
+      <tr th:each="t : ${list}">
+        <td th:text="${t.id}"></td>
+        <td th:if="${showUser}" th:text="${t.user.fullName} + ' (' + ${t.user.phone} + ')'"></td>
+        <td><span class="badge" th:classappend="'b-' + ${t.type}" th:text="${t.type}"></span></td>
+        <td th:with="credit=${t.type.name() == 'RECEIVE' or t.type.name() == 'ADD'}"
+            th:classappend="${credit} ? 'pos' : 'neg'"
+            th:text="(${credit} ? '+' : '−') + ${#numbers.formatDecimal(t.amount,1,'COMMA',2,'POINT')}"></td>
+        <td th:text="${#temporals.format(t.createdAt,'yyyy-MM-dd HH:mm')}"></td>
+        <td th:text="${t.status}"></td>
+        <td th:text="${t.description}"></td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(list)}"><td th:colspan="${showUser} ? 7 : 6" class="hint">No transactions yet.</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
